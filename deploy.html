@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deploy</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --background: #0e1520;
+  --foreground: #eef2f6;
+  --primary: #e2571f;
+  --primary-foreground: #0e1520;
+  --muted: #182234;
+  --muted-foreground: #9fb0c4;
+  --border: #24334a;
+  --accent: #3f8fdc;
+  --card: #141d2b;
+  --font-heading: 'Archivo Black', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --radius: 10px;
+}
+html, body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-body); }
+
+[data-goto],button,a[href]{transition:transform .2s ease,box-shadow .2s ease,filter .2s ease}
+[data-goto]:hover,button:hover{transform:translateY(-2px);filter:brightness(1.04)}
+.m-t{opacity:0;transform:translateY(var(--m-rise)) scale(var(--m-scale));transition:opacity var(--m-ms) var(--m-ease),transform var(--m-ms) var(--m-ease);transition-delay:var(--m-delay,0ms)}
+img.m-t{transform:scale(1.06)}
+.m-t.m-in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.m-t{opacity:1;transform:none;transition:none}[data-goto]:hover,button:hover{transform:none}}
+</style>
+</head>
+<body>
+<!-- navigation -->
+<nav class="sticky top-0 z-50 bg-[var(--background)] border-b border-[var(--border)]">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center justify-between h-16 md:h-20 gap-6">
+      <!-- say: Brand mark leads the sticky bar. -->
+      <a href="#" data-goto="home" class="flex items-center gap-3 shrink-0 group">
+        <span class="inline-flex items-center justify-center w-9 h-9 bg-[var(--primary)] text-[var(--primary-foreground)] rounded-[var(--radius)]" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square">
+            <path d="M4 18 L12 4 L20 18" />
+            <path d="M8 13 H16" />
+          </svg>
+        </span>
+        <span class="text-[var(--foreground)] text-base md:text-lg tracking-tight leading-none" style="font-family:var(--font-heading)">Sloptimus Prime</span>
+      </a>
+
+      <!-- say: Desktop links sit centred, rust underline on hover. -->
+      <ul class="hidden md:flex items-center gap-8 text-sm font-medium">
+        <li>
+          <a href="#" data-goto="home" class="text-[var(--foreground)] border-b-2 border-transparent hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors pb-1">Home</a>
+        </li>
+        <li>
+          <a href="#" data-goto="capabilities" class="text-[var(--muted-foreground)] border-b-2 border-transparent hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors pb-1">Capabilities</a>
+        </li>
+        <li>
+          <a href="#" data-goto="tech-specs" class="text-[var(--muted-foreground)] border-b-2 border-transparent hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors pb-1">Tech Specs</a>
+        </li>
+        <li>
+          <a href="#" data-goto="deploy" class="text-[var(--muted-foreground)] border-b-2 border-transparent hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors pb-1">Deploy</a>
+        </li>
+      </ul>
+
+      <!-- say: Cobalt CTA mirrors the primary action sitewide. -->
+      <a href="#" data-goto="deploy" class="shrink-0 inline-flex items-center gap-2 bg-[var(--primary)] text-[var(--primary-foreground)] text-sm font-semibold px-4 md:px-5 py-2.5 rounded-[var(--radius)] hover:opacity-90 transition-opacity">
+        Request Trial
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" aria-hidden="true">
+          <path d="M5 12 H19" />
+          <path d="M13 6 L19 12 L13 18" />
+        </svg>
+      </a>
+    </div>
+
+    <!-- say: Mobile keeps links in a compact scroll-free row. -->
+    <ul class="md:hidden flex items-center justify-between gap-3 pb-3 text-xs font-medium">
+      <li><a href="#" data-goto="home" class="text-[var(--foreground)]">Home</a></li>
+      <li><a href="#" data-goto="capabilities" class="text-[var(--muted-foreground)]">Capabilities</a></li>
+      <li><a href="#" data-goto="tech-specs" class="text-[var(--muted-foreground)]">Tech Specs</a></li>
+      <li><a href="#" data-goto="deploy" class="text-[var(--muted-foreground)]">Deploy</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- intro -->
+<section class="bg-[var(--background)] text-[var(--foreground)]">
+  <div class="max-w-6xl mx-auto px-6 py-20 md:py-28">
+    <div class="grid gap-12 md:grid-cols-12 md:gap-16 items-end">
+      <div class="md:col-span-8">
+        <!-- say: headline and subline establish the 21-day promise -->
+        <p class="text-xs uppercase tracking-[0.22em] text-[var(--accent)] font-semibold mb-6">Deploy</p>
+        <h1 class="text-[clamp(2.25rem,5.5vw,4.25rem)] leading-[1.02] tracking-tight text-balance" style="font-family:var(--font-heading)">From first trial to live fleet in 21 days.</h1>
+        <p class="mt-7 max-w-2xl text-base md:text-lg leading-relaxed text-[var(--muted-foreground)]">Sloptimus Prime doesn't need a six-month consultancy. Ship a working autobot into your pipeline, watch it transform real inputs, and scale the rollout on your own schedule.</p>
+      </div>
+      <!-- say: buttons side by side, stacking on mobile -->
+      <div class="md:col-span-4 flex flex-col sm:flex-row md:flex-col gap-3 md:items-stretch">
+        <a href="#" data-goto="deploy" class="inline-flex items-center justify-center bg-[var(--primary)] text-[var(--primary-foreground)] px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] rounded-[var(--radius)] hover:opacity-90 transition-opacity">Request Trial</a>
+        <a href="#" data-goto="tech-specs" class="inline-flex items-center justify-center border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] rounded-[var(--radius)] hover:bg-[var(--muted)] transition-colors">See the specs</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- deploy-tracks -->
+<section class="bg-[var(--background)] py-20 md:py-28">
+  <div class="max-w-6xl mx-auto px-6">
+    <!-- say: Heading and subline set the pick-a-track frame. -->
+    <div class="max-w-2xl">
+      <h2 class="text-3xl md:text-4xl leading-tight text-[var(--foreground)]" style="font-family:var(--font-heading)">Pick your deployment track.</h2>
+      <p class="mt-4 text-base md:text-lg text-[var(--muted-foreground)]">Three proven paths, same autobot, different blast radius.</p>
+    </div>
+
+    <!-- say: Three stacked cards, each with its own facts. -->
+    <div class="mt-12 grid gap-6 md:grid-cols-3">
+      <article class="flex flex-col bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius)] p-6 md:p-7">
+        <span class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">Track 01</span>
+        <h3 class="mt-2 text-xl text-[var(--foreground)]" style="font-family:var(--font-heading)">Sandbox Trial</h3>
+        <ul class="mt-5 space-y-2 text-sm text-[var(--foreground)] border-t border-[var(--border)] pt-5">
+          <li>14 days</li>
+          <li>1 autobot</li>
+          <li>10k task credits</li>
+          <li>read-only integrations</li>
+        </ul>
+        <p class="mt-6 text-sm text-[var(--muted-foreground)] leading-relaxed">Best for proving it on your own messy inputs.</p>
+      </article>
+
+      <!-- say: Middle card carries the accent edge as the common pick. -->
+      <article class="flex flex-col bg-[var(--card)] border border-[var(--border)] border-t-4 border-t-[var(--accent)] rounded-[var(--radius)] p-6 md:p-7">
+        <span class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">Track 02</span>
+        <h3 class="mt-2 text-xl text-[var(--foreground)]" style="font-family:var(--font-heading)">Team Install</h3>
+        <ul class="mt-5 space-y-2 text-sm text-[var(--foreground)] border-t border-[var(--border)] pt-5">
+          <li>90 days</li>
+          <li>up to 10 autobots</li>
+          <li>full write access</li>
+          <li>SSO and audit logs</li>
+          <li>named solutions engineer</li>
+        </ul>
+        <p class="mt-6 text-sm text-[var(--muted-foreground)] leading-relaxed">Best for one department going live.</p>
+      </article>
+
+      <article class="flex flex-col bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius)] p-6 md:p-7">
+        <span class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">Track 03</span>
+        <h3 class="mt-2 text-xl text-[var(--foreground)]" style="font-family:var(--font-heading)">Fleet Rollout</h3>
+        <ul class="mt-5 space-y-2 text-sm text-[var(--foreground)] border-t border-[var(--border)] pt-5">
+          <li>annual</li>
+          <li>unlimited autobots</li>
+          <li>multi-region failover</li>
+          <li>custom transform pipelines</li>
+          <li>24/7 escalation line</li>
+        </ul>
+        <p class="mt-6 text-sm text-[var(--muted-foreground)] leading-relaxed">Best for org-wide automation.</p>
+      </article>
+    </div>
+
+    <!-- say: Primary call to action closes the track choice. -->
+    <div class="mt-12 flex flex-col sm:flex-row sm:items-center gap-4">
+      <a href="#" data-goto="deploy" class="inline-flex items-center justify-center bg-[var(--primary)] text-[var(--primary-foreground)] rounded-[var(--radius)] px-7 py-3 text-sm font-semibold hover:opacity-90 transition-opacity">Start with a sandbox trial</a>
+      <a href="#" data-goto="tech-specs" class="inline-flex items-center gap-2 text-sm font-semibold text-[var(--accent)] border-b border-[var(--border)] pb-1 hover:border-[var(--accent)] transition-colors">Compare the specs<span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- pricing-tiers -->
+<section class="py-20 bg-[var(--background)]">
+  <div class="max-w-6xl mx-auto px-6">
+    <!-- say: Starting the pricing tiers section with headline and subline. -->
+    <div class="max-w-2xl">
+      <h2 class="text-3xl md:text-4xl font-black tracking-tight text-[var(--foreground)]" style="font-family:var(--font-heading)">Straight pricing, no transform fees.</h2>
+      <p class="mt-4 text-base md:text-lg text-[var(--muted-foreground)]">Pay per autobot per month. Every tier includes the full reasoning core — no capability locked behind an upgrade.</p>
+    </div>
+
+    <!-- say: Building three tier cards in a responsive grid. -->
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Tier 1 -->
+      <div class="flex flex-col bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius)] p-7">
+        <h3 class="text-xl font-black text-[var(--foreground)]" style="font-family:var(--font-heading)">Sandbox</h3>
+        <p class="mt-4 text-2xl font-bold text-[var(--foreground)]">$0</p>
+        <p class="mt-1 text-sm text-[var(--muted-foreground)]">for 14 days, then $490/mo</p>
+        <ul class="mt-6 space-y-3 text-sm text-[var(--foreground)] flex-1">
+          <li class="flex gap-3"><span class="text-[var(--accent)]" aria-hidden="true">—</span><span>1 autobot</span></li>
+          <li class="flex gap-3"><span class="text-[var(--accent)]" aria-hidden="true">—</span><span>10k task credits</span></li>
+          <li class="flex gap-3"><span class="text-[var(--accent)]" aria-hidden="true">—</span><span>community support</span></li>
+        </ul>
+      </div>
+
+      <!-- Tier 2 -->
+      <div class="flex flex-col bg-[var(--card)] border-2 border-[var(--primary)] rounded-[var(--radius)] p-7">
+        <h3 class="text-xl font-black text-[var(--foreground)]" style="font-family:var(--font-heading)">Team</h3>
+        <p class="mt-4 text-2xl font-bold text-[var(--foreground)]">$2,400/mo</p>
+        <p class="mt-1 text-sm text-[var(--muted-foreground)]">&nbsp;</p>
+        <!-- say: Team card highlighted; listing credits, SSO, SLA. -->
+        <ul class="mt-6 space-y-3 text-sm text-[var(--foreground)] flex-1">
+          <li class="flex gap-3"><span class="text-[var(--accent)]" aria-hidden="true">—</span><span>up to 10 autobots</span></li>
+          <li class="flex gap-3"><span class="text-[var(--accent)]" aria-hidden="true">—</span><span>250k task credits</span></li>
+          <li class="flex gap-3"><span class="text-[var(--accent)]" aria-hidden="true">—</span><span>SSO, audit logs</span></li>
+          <li class="flex gap-3"><span class="text-[var(--accent)]" aria-hidden="true">—</span><span>4-hour response SLA</span></li>
+        </ul>
+      </div>
+
+      <!-- Tier 3 -->
+      <div class="flex flex-col bg-[var(--muted)] border border-[var(--border)] rounded-[var(--radius)] p-7">
+        <h3 class="text-xl font-black text-[var(--foreground)]" style="font-family:var(--font-heading)">Fleet</h3>
+        <p class="mt-4 text-2xl font-bold text-[var(--foreground)]">custom quote</p>
+        <p class="mt-1 text-sm text-[var(--muted-foreground)]">from $9,800/mo</p>
+        <ul class="mt-6 space-y-3 text-sm text-[var(--foreground)] flex-1">
+          <li class="flex gap-3"><span class="text-[var(--accent)]" aria-hidden="true">—</span><span>unlimited autobots</span></li>
+          <li class="flex gap-3"><span class="text-[var(--accent)]" aria-hidden="true">—</span><span>dedicated capacity</span></li>
+          <li class="flex gap-3"><span class="text-[var(--accent)]" aria-hidden="true">—</span><span>multi-region</span></li>
+          <li class="flex gap-3"><span class="text-[var(--accent)]" aria-hidden="true">—</span><span>24/7 escalation</span></li>
+          <li class="flex gap-3"><span class="text-[var(--accent)]" aria-hidden="true">—</span><span>99.95% uptime SLA</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- say: Adding footnote and the Request Trial call to action. -->
+    <div class="mt-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6 border-t border-[var(--border)] pt-8">
+      <p class="text-sm text-[var(--muted-foreground)] max-w-xl">Overage billed at $0.004 per task credit. Cancel any time; annual plans save 18%.</p>
+      <a href="#" data-goto="deploy" class="inline-flex items-center justify-center bg-[var(--primary)] text-[var(--primary-foreground)] font-semibold text-base px-7 py-3 rounded-[var(--radius)] hover:opacity-90 transition-opacity whitespace-nowrap">Request Trial</a>
+    </div>
+  </div>
+</section>
+
+<!-- rollout-checklist -->
+<section class="bg-[var(--background)] py-20 md:py-28">
+  <div class="max-w-6xl mx-auto px-6">
+    <!-- say: Starting the rollout checklist header block. -->
+    <div class="max-w-2xl">
+      <h2 style="font-family:var(--font-heading)" class="text-3xl md:text-4xl tracking-tight text-[var(--foreground)]">The 21-day rollout, step by step.</h2>
+      <p class="mt-4 text-base md:text-lg leading-relaxed text-[var(--muted-foreground)]">What actually happens after you hit request.</p>
+    </div>
+
+    <!-- say: Laying out the six phases as a numbered rail. -->
+    <ol class="mt-12 space-y-4">
+      <li class="bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius)] p-6 md:p-8">
+        <div class="md:flex md:items-start md:gap-8">
+          <div class="shrink-0 md:w-40">
+            <span style="font-family:var(--font-heading)" class="inline-block text-xs uppercase tracking-widest text-[var(--primary-foreground)] bg-[var(--primary)] px-3 py-1 rounded-[var(--radius)]">Day 1–2</span>
+          </div>
+          <div class="mt-4 md:mt-0 flex-1">
+            <h3 style="font-family:var(--font-heading)" class="text-lg md:text-xl text-[var(--foreground)]">Kickoff</h3>
+            <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">We map your inputs, outputs and the three tasks that hurt most.</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius)] p-6 md:p-8">
+        <div class="md:flex md:items-start md:gap-8">
+          <div class="shrink-0 md:w-40">
+            <span style="font-family:var(--font-heading)" class="inline-block text-xs uppercase tracking-widest text-[var(--primary-foreground)] bg-[var(--primary)] px-3 py-1 rounded-[var(--radius)]">Day 3–5</span>
+          </div>
+          <div class="mt-4 md:mt-0 flex-1">
+            <h3 style="font-family:var(--font-heading)" class="text-lg md:text-xl text-[var(--foreground)]">Provision</h3>
+            <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">Your dedicated autobot spins up in your region, integrations connected read-only.</p>
+          </div>
+        </div>
+      </li>
+
+      <!-- say: Middle phases carry the most substance, keeping spacing even. -->
+      <li class="bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius)] p-6 md:p-8">
+        <div class="md:flex md:items-start md:gap-8">
+          <div class="shrink-0 md:w-40">
+            <span style="font-family:var(--font-heading)" class="inline-block text-xs uppercase tracking-widest text-[var(--primary-foreground)] bg-[var(--primary)] px-3 py-1 rounded-[var(--radius)]">Day 6–12</span>
+          </div>
+          <div class="mt-4 md:mt-0 flex-1">
+            <h3 style="font-family:var(--font-heading)" class="text-lg md:text-xl text-[var(--foreground)]">Transform tuning</h3>
+            <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">Sloptimus Prime learns your formats and edge cases on real, redacted data.</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius)] p-6 md:p-8">
+        <div class="md:flex md:items-start md:gap-8">
+          <div class="shrink-0 md:w-40">
+            <span style="font-family:var(--font-heading)" class="inline-block text-xs uppercase tracking-widest text-[var(--primary-foreground)] bg-[var(--primary)] px-3 py-1 rounded-[var(--radius)]">Day 13–16</span>
+          </div>
+          <div class="mt-4 md:mt-0 flex-1">
+            <h3 style="font-family:var(--font-heading)" class="text-lg md:text-xl text-[var(--foreground)]">Shadow mode</h3>
+            <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">It runs beside your team, outputs reviewed, not shipped.</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius)] p-6 md:p-8">
+        <div class="md:flex md:items-start md:gap-8">
+          <div class="shrink-0 md:w-40">
+            <span style="font-family:var(--font-heading)" class="inline-block text-xs uppercase tracking-widest text-[var(--primary-foreground)] bg-[var(--primary)] px-3 py-1 rounded-[var(--radius)]">Day 17–19</span>
+          </div>
+          <div class="mt-4 md:mt-0 flex-1">
+            <h3 style="font-family:var(--font-heading)" class="text-lg md:text-xl text-[var(--foreground)]">Write access</h3>
+            <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">Approvals wired in, guardrails and rollback tested.</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="bg-[var(--muted)] border border-[var(--border)] rounded-[var(--radius)] p-6 md:p-8">
+        <div class="md:flex md:items-start md:gap-8">
+          <div class="shrink-0 md:w-40">
+            <span style="font-family:var(--font-heading)" class="inline-block text-xs uppercase tracking-widest text-[var(--primary-foreground)] bg-[var(--primary)] px-3 py-1 rounded-[var(--radius)]">Day 20–21</span>
+          </div>
+          <div class="mt-4 md:mt-0 flex-1">
+            <h3 style="font-family:var(--font-heading)" class="text-lg md:text-xl text-[var(--foreground)]">Go live</h3>
+            <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">Handover session, runbook delivered, on-call channel opened.</p>
+          </div>
+        </div>
+      </li>
+    </ol>
+
+    <!-- say: Closing with the single kickoff CTA. -->
+    <div class="mt-10 flex flex-col sm:flex-row sm:items-center gap-4">
+      <a href="#" data-goto="deploy" style="font-family:var(--font-heading)" class="inline-flex items-center justify-center px-7 py-3.5 rounded-[var(--radius)] bg-[var(--primary)] text-[var(--primary-foreground)] text-sm tracking-wide hover:opacity-90 transition-opacity">Book a kickoff call</a>
+      <a href="#" data-goto="capabilities" class="inline-flex items-center justify-center px-7 py-3.5 rounded-[var(--radius)] border border-[var(--border)] text-[var(--foreground)] text-sm font-medium hover:bg-[var(--muted)] transition-colors">Capabilities</a>
+    </div>
+  </div>
+</section>
+
+<!-- security-strip -->
+<section class="bg-[var(--background)] py-20">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+      <div>
+        <p class="text-[var(--accent)] text-sm font-semibold tracking-[0.2em] uppercase mb-4">Security</p>
+        <h2 class="text-3xl md:text-4xl leading-tight text-[var(--foreground)] mb-8" style="font-family:var(--font-heading)">Cleared before it ever transforms a byte.</h2>
+        <!-- say: Six clearance items as a checked list. -->
+        <ul class="space-y-5">
+          <li class="flex items-start gap-3">
+            <span class="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-[var(--radius)] bg-[var(--primary)] text-[var(--primary-foreground)]">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" class="h-3 w-3" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </span>
+            <span class="text-[var(--foreground)]">SOC 2 Type II audited.</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-[var(--radius)] bg-[var(--primary)] text-[var(--primary-foreground)]">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" class="h-3 w-3" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </span>
+            <span class="text-[var(--foreground)]">ISO 27001 certified.</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-[var(--radius)] bg-[var(--primary)] text-[var(--primary-foreground)]">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" class="h-3 w-3" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </span>
+            <span class="text-[var(--foreground)]">Your data never trains shared models — per-tenant isolation by default.</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- say: Real photo of secure datacenter on the right. -->
+      <div class="aspect-[4/3] w-full rounded-[var(--radius)] overflow-hidden">
+        <img data-gen="Photograph of a secure server room, cobalt-blue racks with rust-orange status lights, cool industrial mood, shallow depth of field" alt="Secure server racks lit with cobalt panels and rust-orange indicator lights" class="w-full h-full object-cover rounded-[var(--radius)]" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22xMidYMid%20slice%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23182234%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23141d2b%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22400%22%20height%3D%22300%22%20fill%3D%22url(%23g)%22%2F%3E%3Ccircle%20cx%3D%22333.2%22%20cy%3D%2278.16%22%20r%3D%2229.28%22%20fill%3D%22%233f8fdc%22%20fill-opacity%3D%22.35%22%2F%3E%3Cpath%20d%3D%22M0%20210.32%20L90.56%20159.52%20L171.92%20200%20L268.72%20149.52%20L400%20215%22%20fill%3D%22none%22%20stroke%3D%22%23e2571f%22%20stroke-opacity%3D%22.35%22%20stroke-width%3D%222.2%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%227%204%22%2F%3E%3Cpath%20d%3D%22M0%20250%20Q100%20236.28%20200%20245%20T400%20240%22%20fill%3D%22none%22%20stroke%3D%22%23e2571f%22%20stroke-opacity%3D%22.35%22%20stroke-width%3D%222.2%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%227%204%22%2F%3E%3Ctext%20x%3D%22200%22%20y%3D%22282%22%20text-anchor%3D%22middle%22%20font-family%3D%22ui-monospace%2Cmonospace%22%20font-size%3D%2210%22%20fill%3D%22%239fb0c4%22%3Epainting%20%C2%B7%20Photograph%20of%20a%20secure%20se%E2%80%A6%3C%2Ftext%3E%3C%2Fsvg%3E" data-sketch="">
+      </div>
+    </div>
+
+    <div class="grid sm:grid-cols-3 gap-6 mt-14">
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius)] p-6">
+        <div class="flex items-start gap-3">
+          <span class="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-[var(--radius)] bg-[var(--primary)] text-[var(--primary-foreground)]">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" class="h-3 w-3" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </span>
+          <p class="text-[var(--foreground)] text-sm leading-relaxed">EU and US data residency.</p>
+        </div>
+      </div>
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius)] p-6">
+        <div class="flex items-start gap-3">
+          <span class="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-[var(--radius)] bg-[var(--primary)] text-[var(--primary-foreground)]">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" class="h-3 w-3" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </span>
+          <p class="text-[var(--foreground)] text-sm leading-relaxed">Full audit log of every transformation, exportable to your SIEM.</p>
+        </div>
+      </div>
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius)] p-6">
+        <div class="flex items-start gap-3">
+          <span class="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-[var(--radius)] bg-[var(--primary)] text-[var(--primary-foreground)]">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" class="h-3 w-3" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </span>
+          <p class="text-[var(--foreground)] text-sm leading-relaxed">Role-based approvals on all write actions.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- say: CTA button leads to tech-specs page. -->
+    <div class="mt-12">
+      <a href="#" data-goto="tech-specs" class="inline-flex items-center gap-2 bg-[var(--primary)] text-[var(--primary-foreground)] px-6 py-3 rounded-[var(--radius)] font-semibold hover:opacity-90 transition-opacity" style="font-family:var(--font-heading)">
+        Read the full security posture
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- fleet-map -->
+<section class="bg-[var(--background)]">
+  <div class="max-w-6xl mx-auto px-6 py-20 md:py-28">
+    <div class="max-w-2xl">
+      <h2 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-[var(--foreground)]" style="font-family:var(--font-heading)">Where Sloptimus Prime is already on shift.</h2>
+      <p class="mt-4 text-base md:text-lg text-[var(--muted-foreground)]">Live installations across four regions, 1,840 autobots deployed.</p>
+    </div>
+
+    <!-- say: Panel holds stats, region list and CTA in normal flow -->
+    <div class="mt-12 rounded-[var(--radius)] bg-[var(--card)] border border-[var(--border)] overflow-hidden">
+      <div class="grid grid-cols-1 md:grid-cols-2">
+        <dl class="grid grid-cols-2 gap-px bg-[var(--border)]">
+          <div class="bg-[var(--card)] p-6 md:p-8">
+            <dt class="text-sm text-[var(--muted-foreground)]">1,840 autobots running in production.</dt>
+            <dd class="mt-2 text-3xl md:text-4xl font-black text-[var(--accent)]" style="font-family:var(--font-heading)">1,840</dd>
+          </div>
+          <div class="bg-[var(--card)] p-6 md:p-8">
+            <dt class="text-sm text-[var(--muted-foreground)]">41 million tasks transformed last quarter.</dt>
+            <dd class="mt-2 text-3xl md:text-4xl font-black text-[var(--accent)]" style="font-family:var(--font-heading)">41M</dd>
+          </div>
+          <div class="bg-[var(--card)] p-6 md:p-8">
+            <dt class="text-sm text-[var(--muted-foreground)]">99.96% measured uptime over 12 months.</dt>
+            <dd class="mt-2 text-3xl md:text-4xl font-black text-[var(--foreground)]" style="font-family:var(--font-heading)">99.96%</dd>
+          </div>
+          <div class="bg-[var(--card)] p-6 md:p-8">
+            <dt class="text-sm text-[var(--muted-foreground)]">21 days median time to go-live.</dt>
+            <dd class="mt-2 text-3xl md:text-4xl font-black text-[var(--foreground)]" style="font-family:var(--font-heading)">21 days</dd>
+          </div>
+        </dl>
+
+        <!-- say: Region nodes listed beside stats, each with a small pin -->
+        <div class="p-6 md:p-8 md:border-l border-t md:border-t-0 border-[var(--border)]">
+          <h3 class="text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-foreground)]" style="font-family:var(--font-heading)">Regions</h3>
+          <ul class="mt-5 space-y-3">
+            <li class="flex items-center gap-3 rounded-[var(--radius)] bg-[var(--muted)] px-4 py-3">
+              <span class="h-2.5 w-2.5 shrink-0 rounded-full bg-[var(--accent)]" aria-hidden="true"></span>
+              <span class="text-sm font-bold text-[var(--foreground)]">US-East</span>
+              <span class="text-sm text-[var(--muted-foreground)]">Ashburn</span>
+            </li>
+            <li class="flex items-center gap-3 rounded-[var(--radius)] bg-[var(--muted)] px-4 py-3">
+              <span class="h-2.5 w-2.5 shrink-0 rounded-full bg-[var(--accent)]" aria-hidden="true"></span>
+              <span class="text-sm font-bold text-[var(--foreground)]">US-West</span>
+              <span class="text-sm text-[var(--muted-foreground)]">Portland</span>
+            </li>
+            <li class="flex items-center gap-3 rounded-[var(--radius)] bg-[var(--muted)] px-4 py-3">
+              <span class="h-2.5 w-2.5 shrink-0 rounded-full bg-[var(--accent)]" aria-hidden="true"></span>
+              <span class="text-sm font-bold text-[var(--foreground)]">EU-Central</span>
+              <span class="text-sm text-[var(--muted-foreground)]">Frankfurt</span>
+            </li>
+            <li class="flex items-center gap-3 rounded-[var(--radius)] bg-[var(--muted)] px-4 py-3">
+              <span class="h-2.5 w-2.5 shrink-0 rounded-full bg-[var(--accent)]" aria-hidden="true"></span>
+              <span class="text-sm font-bold text-[var(--foreground)]">APAC</span>
+              <span class="text-sm text-[var(--muted-foreground)]">Singapore</span>
+            </li>
+          </ul>
+          <a href="#" data-goto="deploy" class="mt-6 inline-flex w-full items-center justify-center rounded-[var(--radius)] bg-[var(--primary)] px-6 py-3 text-sm font-bold text-[var(--primary-foreground)] transition-opacity hover:opacity-90" style="font-family:var(--font-heading)">Check capacity in your region</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- faq -->
+<section class="bg-[var(--background)] py-20 md:py-28">
+  <div class="max-w-6xl mx-auto px-6">
+    <!-- say: Starting with the FAQ headline and layout grid. -->
+    <div class="grid gap-12 md:grid-cols-[minmax(0,1fr)_2fr] md:gap-16">
+      <div class="md:sticky md:top-24 md:self-start">
+        <p class="text-xs uppercase tracking-[0.2em] text-[var(--accent)] mb-4">Before you commit</p>
+        <h2 style="font-family:var(--font-heading)" class="text-3xl md:text-4xl leading-[1.1] tracking-tight text-[var(--foreground)]">
+          Questions teams ask before they commit.
+        </h2>
+        <div class="mt-8 h-px w-16 bg-[var(--accent)]"></div>
+        <a href="#" data-goto="deploy" class="mt-8 inline-flex items-center justify-center rounded-[var(--radius)] bg-[var(--primary)] px-6 py-3 text-sm font-semibold text-[var(--primary-foreground)] transition-opacity hover:opacity-90">
+          Request Trial
+        </a>
+        <p class="mt-4 text-sm text-[var(--muted-foreground)]">
+          Need detail instead? <a href="#" data-goto="tech-specs" class="text-[var(--foreground)] underline decoration-[var(--accent)] decoration-2 underline-offset-4">See the tech specs</a>.
+        </p>
+      </div>
+
+      <!-- say: Six question/answer pairs in a bordered stacked list. -->
+      <div class="divide-y divide-[var(--border)] border-y border-[var(--border)]">
+        <div class="py-6 first:pt-0">
+          <h3 style="font-family:var(--font-heading)" class="text-base md:text-lg text-[var(--foreground)]">How long is the trial, really?</h3>
+          <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">14 days, full reasoning core, no card required. Extend once by asking your solutions engineer.</p>
+        </div>
+        <div class="py-6">
+          <h3 style="font-family:var(--font-heading)" class="text-base md:text-lg text-[var(--foreground)]">Can it touch production data?</h3>
+          <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">Not during trial. Write access unlocks after shadow mode passes your review, day 17 at the earliest.</p>
+        </div>
+        <div class="py-6">
+          <h3 style="font-family:var(--font-heading)" class="text-base md:text-lg text-[var(--foreground)]">What if it gets something wrong?</h3>
+          <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">Every write action carries a diff, an approver and a one-click rollback. Guardrails are yours to set.</p>
+        </div>
+        <div class="py-6">
+          <h3 style="font-family:var(--font-heading)" class="text-base md:text-lg text-[var(--foreground)]">Do we need ML engineers?</h3>
+          <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">No. A solutions engineer handles tuning; your team reviews outputs and approves the runbook.</p>
+        </div>
+        <div class="py-6">
+          <h3 style="font-family:var(--font-heading)" class="text-base md:text-lg text-[var(--foreground)]">Can we run it in our own VPC?</h3>
+          <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">Yes, on Fleet tier — self-hosted inference with the same control plane.</p>
+        </div>
+        <div class="py-6 last:pb-0">
+          <h3 style="font-family:var(--font-heading)" class="text-base md:text-lg text-[var(--foreground)]">What does it integrate with?</h3>
+          <p class="mt-2 text-[var(--muted-foreground)] leading-relaxed">REST, gRPC, webhooks, S3, Postgres, Salesforce, Jira, Slack and your internal APIs via the transform SDK.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- cta -->
+<section class="bg-[var(--background)] py-20 sm:py-24">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius)] px-6 py-12 sm:px-12 sm:py-16">
+      <div class="max-w-3xl">
+        <h2 class="text-3xl sm:text-4xl md:text-5xl leading-[1.05] tracking-tight text-[var(--foreground)]" style="font-family:var(--font-heading)">Your autobot is three weeks out.</h2>
+        <p class="mt-6 text-base sm:text-lg leading-relaxed text-[var(--muted-foreground)]">Request a trial, bring your messiest inputs, and watch Sloptimus Prime turn them into finished, deployable work.</p>
+      </div>
+      <!-- say: two actions sit below the copy, never over it -->
+      <div class="mt-10 flex flex-col sm:flex-row gap-4">
+        <a href="#" data-goto="deploy" class="inline-flex items-center justify-center px-7 py-3.5 bg-[var(--primary)] text-[var(--primary-foreground)] text-sm font-semibold tracking-wide rounded-[var(--radius)] hover:opacity-90 transition-opacity">Request Trial</a>
+        <a href="#" data-goto="capabilities" class="inline-flex items-center justify-center px-7 py-3.5 bg-[var(--muted)] text-[var(--foreground)] text-sm font-semibold tracking-wide border border-[var(--border)] rounded-[var(--radius)] hover:text-[var(--accent)] transition-colors">Explore capabilities</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- footer -->
+<footer class="bg-[var(--card)] border-t border-[var(--border)] mt-auto">
+  <div class="max-w-6xl mx-auto px-6 py-14">
+
+    <!-- say: Starting footer with brand statement and wordmark -->
+    <div class="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
+
+      <div class="max-w-md">
+        <div class="flex items-center gap-3">
+          <span class="inline-flex h-9 w-9 items-center justify-center rounded-[var(--radius)] bg-[var(--primary)] text-[var(--primary-foreground)]" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 18V9l4-4 4 3 4-3 4 4v9" />
+              <path d="M8 18v-4h8v4" />
+            </svg>
+          </span>
+          <span style="font-family:var(--font-heading)" class="text-lg tracking-tight text-[var(--foreground)]">Sloptimus Prime</span>
+        </div>
+        <p class="mt-4 text-base leading-relaxed text-[var(--muted-foreground)]">
+          The AI autobot that transforms sloppy work into shipped product.
+        </p>
+      </div>
+
+      <!-- say: Adding the nav column of site links -->
+      <nav aria-label="Footer" class="grid grid-cols-2 gap-x-10 gap-y-3 text-sm sm:grid-cols-3 md:gap-x-14">
+        <a href="#" data-goto="home" class="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors">Home</a>
+        <a href="#" data-goto="capabilities" class="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors">Capabilities</a>
+        <a href="#" data-goto="tech-specs" class="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors">Tech Specs</a>
+        <a href="#" data-goto="deploy" class="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors">Deploy</a>
+        <a href="#" class="text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors">Privacy</a>
+        <a href="#" class="text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors">Contact</a>
+      </nav>
+    </div>
+
+    <!-- say: Closing with copyright rule and legal line -->
+    <div class="mt-12 border-t border-[var(--border)] pt-6">
+      <p class="text-xs uppercase tracking-widest text-[var(--muted-foreground)]">
+        © 2025 Sloptimus Systems
+      </p>
+    </div>
+
+  </div>
+</footer>
+<script>
+// layout: a text panel floated over a map or picture moves beside it when it would cover other text
+(() => {
+  const guard = function swarmLayout(root, report) {
+  const doc = root.ownerDocument || root
+  const view = doc.defaultView
+  // a real sentence or name, not a pin number or a one-word label
+  const prose = el => [...el.querySelectorAll('*'), el].some(x => [...x.childNodes].some(n => n.nodeType === 3 && n.textContent.trim().length >= 12))
+  const area = r => Math.max(0, r.width) * Math.max(0, r.height)
+  const meet = (a, b) => Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) * Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top))
+  // on screen: not hidden, not faded out, not inside a closed <details> menu
+  const shown = el => el.checkVisibility ? el.checkVisibility({ opacityProperty: true, visibilityProperty: true }) : !el.closest('details:not([open])') && view.getComputedStyle(el).display !== 'none'
+
+  // every visible run of text in a section, with its box
+  function texts(section) {
+    const out = [], walk = doc.createTreeWalker(section, 4)
+    for (let n = walk.nextNode(); n; n = walk.nextNode()) {
+      if (!n.textContent.trim() || !n.parentElement || !shown(n.parentElement)) continue
+      const r = doc.createRange()
+      r.selectNodeContents(n)
+      const b = r.getBoundingClientRect()
+      if (area(b) > 0) out.push({ node: n, box: b })
+    }
+    return out
+  }
+
+  const clip = t => t.replace(/\s+/g, ' ').trim().slice(0, 48)
+  const found = []
+  for (const section of [...root.children]) {
+    // menus and dropdowns in the nav are meant to sit over the page
+    if (/^(SCRIPT|STYLE|LINK|TEMPLATE|NAV|HEADER)$/.test(section.tagName) || section.dataset.layer === 'nav') continue
+    // text panels the design positions absolutely, outermost first
+    const floats = [...section.querySelectorAll('*')].filter(el => !el.dataset.swarmFlow && view.getComputedStyle(el).position === 'absolute' && shown(el) && prose(el))
+    const outer = floats.filter(el => !floats.some(o => o !== el && o.contains(el)))
+    if (!outer.length) continue
+    const runs = texts(section)
+    const after = new Map()
+    for (const el of outer) {
+      const box = el.getBoundingClientRect()
+      // a badge poking out of its card is fine; a panel on top of other text is not
+      const hit = runs.find(t => !el.contains(t.node) && meet(box, t.box) > 0.25 * area(t.box))
+      if (!hit) continue
+      found.push({ layer: section.dataset.layer || null, index: [...root.children].indexOf(section), panel: clip(el.textContent), covers: clip(hit.node.textContent) })
+      if (report) continue
+      const host = el.offsetParent, hb = host?.getBoundingClientRect()
+      el.dataset.swarmFlow = '1'
+      Object.assign(el.style, { position: 'relative', inset: 'auto', transform: 'none', width: 'auto', maxWidth: '100%', zIndex: 'auto' })
+      // inside the section, the panel leaves the box and sits just above or below it
+      if (!host || host === section || !section.contains(host) || host.contains(section)) continue
+      if (box.top + box.height / 2 < hb.top + hb.height / 2 && !after.has(host)) {
+        host.before(el)
+        el.style.margin = '0 0 16px'
+      } else {
+        ;(after.get(host) || host).after(el)
+        after.set(host, el)
+        el.style.margin = '16px 0 0'
+      }
+    }
+  }
+  return found
+}
+  const run = () => guard(document.body)
+  run()
+  document.fonts && document.fonts.ready.then(run)
+  let t
+  addEventListener('resize', () => { clearTimeout(t); t = setTimeout(run, 150) })
+})()
+
+// motion: sections reveal as they scroll in
+addEventListener('load', () => (function swarmMotion(root, preset) {
+  const p = { gentle: { rise: 18, scale: 1, ms: 750, step: 70, ease: 'cubic-bezier(.2,.7,.2,1)' }, snappy: { rise: 36, scale: 0.96, ms: 520, step: 55, ease: 'cubic-bezier(.34,1.56,.64,1)' } }[preset] || { rise: 18, scale: 1, ms: 750, step: 70, ease: 'ease' }
+  const doc = root.ownerDocument || root
+  const html = doc.documentElement
+  html.style.setProperty('--m-rise', `${p.rise}px`)
+  html.style.setProperty('--m-scale', String(p.scale))
+  html.style.setProperty('--m-ms', `${p.ms}ms`)
+  html.style.setProperty('--m-ease', p.ease)
+  const view = doc.defaultView
+  if (view.matchMedia && view.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  const PICK = 'h1,h2,h3,h4,p,img,button,[data-goto],li,article,figure,blockquote,form,table,svg'
+  // the page's top-level blocks are its sections
+  const sections = [...root.children].filter(el => !/^(SCRIPT|STYLE|LINK|TEMPLATE)$/.test(el.tagName))
+  // once revealed, an element drops the reveal so its hover moves without a delay
+  const settle = el => {
+    const done = e => {
+      if (e.target !== el) return
+      el.removeEventListener('transitionend', done)
+      el.classList.remove('m-t', 'm-in')
+      el.style.removeProperty('--m-delay')
+    }
+    el.addEventListener('transitionend', done)
+  }
+  const show = s => s.querySelectorAll('.m-t:not(.m-in)').forEach(el => { settle(el); el.classList.add('m-in') })
+  const io = new view.IntersectionObserver(entries => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue
+      io.unobserve(e.target)
+      show(e.target)
+    }
+  }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' })
+  sections.forEach((s, si) => {
+    if (s.dataset.mDone) return
+    s.dataset.mDone = '1'
+    // the nav is there from the start
+    if (/^(nav|header)$/i.test(s.tagName) || s.dataset.layer === 'nav' || (si === 0 && s.querySelector('nav'))) return
+    let n = 0
+    for (const el of s.querySelectorAll(PICK)) {
+      if (n >= 14) break
+      if (el.closest('.m-t') || (el.tagName.toLowerCase() !== 'svg' && el.closest('svg'))) continue
+      // tiny things, and things the design already moves or positions with a transform, stay put
+      if (el.getBoundingClientRect().height < 4 || view.getComputedStyle(el).transform !== 'none') continue
+      el.classList.add('m-t')
+      el.style.setProperty('--m-delay', `${Math.min(n, 10) * p.step}ms`)
+      n++
+    }
+    // the first screen plays as the page opens; the rest as it scrolls in
+    if (s.getBoundingClientRect().top < view.innerHeight * 0.9) view.requestAnimationFrame(() => view.requestAnimationFrame(() => show(s)))
+    else io.observe(s)
+  })
+})(document.body, "snappy"))
+
+// buttons and links made on the canvas name the page they go to
+const pages = {"home":"index.html","capabilities":"capabilities.html","tech-specs":"tech-specs.html","deploy":"deploy.html"}
+document.addEventListener('click', e => {
+  const go = e.target.closest('[data-goto]')
+  if (go && pages[go.dataset.goto]) { e.preventDefault(); location.href = pages[go.dataset.goto] }
+})
+document.addEventListener('submit', e => e.preventDefault())
+</script>
+</body>
+</html>
